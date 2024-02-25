@@ -21,13 +21,47 @@ Password login will be disabled later.
 
 ### Connect to internet (PPPoE)
 
-```
-# PPPOE_USERNAME='<your PPPoE username>'
-# PPPOE_PASSWORD='<your PPPoE password>'
-# uci set network.wan.proto="pppoe"
-# uci set network.wan.username="$PPPOE_USERNAME"
-# uci set network.wan.password="$PPPOE_PASSWORD"
-# uci changes network
-# uci commit network
+```bash
+PPPOE_USERNAME='<your PPPoE username>'
+PPPOE_PASSWORD='<your PPPoE password>'
+uci set network.wan.proto="pppoe"
+uci set network.wan.username="$PPPOE_USERNAME"
+uci set network.wan.password="$PPPOE_PASSWORD"
+uci changes network
+uci commit network
+/etc/init.d/network restart
 ```
 
+### Set hostname
+
+```bash
+uci show system
+uci set system.@system[0].hostname=turris
+uci commit system
+/etc/init.d/system restart
+```
+
+### Install SSH keys
+
+```bash
+cd /etc/dropbear
+wget https://public.tkdev.space/authorized_keys
+/etc/init.d/network restart
+```
+
+### Change the IP address
+
+```bash
+uci set network.lan.ipaddr='192.168.71.1'
+uci commit network
+/etc/init.d/network restart
+```
+
+### Disable SSH passwords
+
+```bash
+uci set dropbear.@dropbear[0].PasswordAuth='off'
+uci set dropbear.@dropbear[0].RootPasswordAuth='off'
+uci commit dropbear
+/etc/init.d/network restart
+```
