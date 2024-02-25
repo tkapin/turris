@@ -14,9 +14,10 @@ When running OpenWrt already, it's possible to return to the original state by .
 
 ### Set root password
 
-Password login will be disabled later.
-```
-# passwd
+Password SSH login will be disabled later.
+
+```bash
+passwd
 ```
 
 ### Connect to internet (PPPoE)
@@ -41,19 +42,21 @@ uci commit system
 /etc/init.d/system restart
 ```
 
+### Change the IP address
+
+It's useful to not use the default 192.168.1.1 when connecting multiple VPN networks.
+
+```bash
+uci set network.lan.ipaddr='192.168.71.1'
+uci commit network
+/etc/init.d/network restart
+```
+
 ### Install SSH keys
 
 ```bash
 cd /etc/dropbear
 wget https://public.tkdev.space/authorized_keys
-/etc/init.d/network restart
-```
-
-### Change the IP address
-
-```bash
-uci set network.lan.ipaddr='192.168.71.1'
-uci commit network
 /etc/init.d/network restart
 ```
 
