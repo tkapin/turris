@@ -23,8 +23,8 @@ passwd
 ### Connect to internet (PPPoE)
 
 ```bash
-PPPOE_USERNAME='<your PPPoE username>'
-PPPOE_PASSWORD='<your PPPoE password>'
+export PPPOE_USERNAME='<your PPPoE username>'
+export PPPOE_PASSWORD='<your PPPoE password>'
 uci set network.wan.proto="pppoe"
 uci set network.wan.username="$PPPOE_USERNAME"
 uci set network.wan.password="$PPPOE_PASSWORD"
@@ -67,4 +67,35 @@ uci set dropbear.@dropbear[0].PasswordAuth='off'
 uci set dropbear.@dropbear[0].RootPasswordAuth='off'
 uci commit dropbear
 /etc/init.d/network restart
+```
+
+### Set up Wi-Fi
+
+```bash
+# 5 GHz
+uci set wireless.default_radio0.ssid='tk-wifi-rp-5'
+uci set wireless.default_radio0.key='matching salt and pepper shakers'
+uci set wireless.default_radio0.encryption='sae-mixed'
+uci delete wireless.radio0.disabled
+# 2.4 GHz
+uci set wireless.default_radio1.ssid='tk-wifi-rp-2.4'
+uci set wireless.default_radio1.key='matching salt and pepper shakers'
+uci set wireless.default_radio1.encryption='sae-mixed'
+uci delete wireless.radio1.disabled
+uci commit wireless
+/etc/init.d/network restart
+```
+
+### TV Blocker
+
+```bash
+uci set firewall.blocktv=rule
+uci set firewall.blocktv.name='Block-TV'
+uci set firewall.blocktv.src='lan'
+uci set firewall.blocktv.src_mac='58:FD:B1:EF:8A:A0'
+uci set firewall.blocktv.dest='wan'
+uci set firewall.blocktv.target='REJECT'
+uci set firewall.blocktv.enabled='1'
+uci commit firewall
+/etc/init.d/firewall restart
 ```
